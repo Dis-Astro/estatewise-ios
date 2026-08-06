@@ -34,10 +34,17 @@ struct AppShellView: View {
     var body: some View {
         if horizontalSizeClass == .regular {
             NavigationSplitView {
-                List(selection: $selectedTab) {
+                List {
                     ForEach(AppTab.allCases) { tab in
-                        Label(tab.title, systemImage: tab.systemImage)
-                            .tag(tab)
+                        Button {
+                            selectedTab = tab
+                        } label: {
+                            Label(tab.title, systemImage: tab.systemImage)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .listRowBackground(selectedTab == tab ? Color.accentColor.opacity(0.12) : Color.clear)
                     }
                 }
                 .navigationTitle("EstateWise")
