@@ -34,9 +34,11 @@ struct AppShellView: View {
     var body: some View {
         if horizontalSizeClass == .regular {
             NavigationSplitView {
-                List(AppTab.allCases, selection: $selectedTab) { tab in
-                    Label(tab.title, systemImage: tab.systemImage)
-                        .tag(tab)
+                List(selection: $selectedTab) {
+                    ForEach(AppTab.allCases) { tab in
+                        Label(tab.title, systemImage: tab.systemImage)
+                            .tag(tab)
+                    }
                 }
                 .navigationTitle("EstateWise")
             } detail: {
@@ -73,4 +75,3 @@ struct AppShellView: View {
         }
     }
 }
-
