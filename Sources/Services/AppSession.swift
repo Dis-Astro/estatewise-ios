@@ -20,12 +20,13 @@ final class AppSession {
         self.apiClient = apiClient
     }
 
-    func signIn(email: String, password: String) async {
+    func signIn(serverURL: String, email: String, password: String) async {
         guard state != .authenticating else { return }
         state = .authenticating
         errorMessage = nil
 
         do {
+            try await apiClient.configure(baseURLString: serverURL)
             let response = try await apiClient.login(email: email, password: password)
             user = response.user
             state = .signedIn
