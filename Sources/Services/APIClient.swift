@@ -3,13 +3,14 @@ import Foundation
 struct APIConfiguration: Sendable {
     var baseURL: URL
 
-    static let production = APIConfiguration(
-        baseURL: URL(string: "http://127.0.0.1:8001/api/v1")!
+    static let `default` = APIConfiguration(
+        baseURL: URL(string: UserDefaults.standard.string(forKey: "estatewise.apiBaseURL") ?? "http://127.0.0.1:8001/api/v1")!
     )
 }
 
 enum APIError: LocalizedError {
     case invalidResponse
+    case invalidBaseURL
     case httpStatus(Int, String?)
     case missingAccessToken
 
@@ -17,6 +18,8 @@ enum APIError: LocalizedError {
         switch self {
         case .invalidResponse:
             "Risposta del server non valida."
+        case .invalidBaseURL:
+            "Indirizzo del server non valido."
         case let .httpStatus(code, detail):
             detail ?? "Errore HTTP \(code)."
         case .missingAccessToken:
@@ -66,17 +69,26 @@ struct RemoteProperty: Codable, Sendable {
 }
 
 actor APIClient {
-    private let configuration: APIConfiguration
+    private var configuration: APIConfiguration
     private let session: URLSession
     private var accessToken: String?
     private var refreshToken: String?
 
     init(
-        configuration: APIConfiguration = .production,
+        configuration: APIConfiguration = .default,
         session: URLSession = .shared
     ) {
         self.configuration = configuration
         self.session = session
+    }
+
+    func configure(baseURLString: String) throws {
+        let normalized = baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let url = URL(string: normalized), url.scheme != nil, url.host != nil else {
+            throw APIError.invalidBaseURL
+        }
+        configuration = APIConfiguration(baseURL: url)
+        UserDefaults.standard.set(normalized, forKey: "estatewise.apiBaseURL")
     }
 
     func setTokens(accessToken: String?, refreshToken: String?) {
@@ -111,17 +123,6 @@ actor APIClient {
         return try await perform(request)
     }
 
-    func healthCheck() async throws {
-        let request = URLRequest(url: configuration.baseURL.appending(path: "health"))
-        let (_, response) = try await session.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw APIError.invalidResponse
-        }
-        guard 200..<300 ~= httpResponse.statusCode else {
-            throw APIError.httpStatus(httpResponse.statusCode, nil)
-        }
-    }
-
     private func perform<T: Decodable>(_ request: URLRequest) async throws -> T {
         let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -129,8 +130,7 @@ actor APIClient {
         }
 
         guard 200..<300 ~= httpResponse.statusCode else {
-            let detail = (try? JSONSerialization.jsonObject(with: data))
-                .flatMap { $0 as? [String: Any] }?["detail"] as? String
+            let detail = ((try? JSONSerialization.jsonObject(with: data)) as? [String: Any])?["detail"] as? String
             throw APIError.httpStatus(httpResponse.statusCode, detail)
         }
 
