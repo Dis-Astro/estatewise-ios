@@ -3,13 +3,21 @@ import SwiftUI
 struct LoginView: View {
     @Environment(AppSession.self) private var session
 
+    @State private var serverURL = UserDefaults.standard.string(forKey: "estatewise.apiBaseURL") ?? "http://127.0.0.1:8001/api/v1"
     @State private var email = ""
     @State private var password = ""
 
     var body: some View {
         NavigationStack {
             Form {
-                Section {
+                Section("Server") {
+                    TextField("URL API", text: $serverURL)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .keyboardType(.URL)
+                }
+
+                Section("Accesso") {
                     TextField("Email", text: $email)
                         .textContentType(.username)
                         .textInputAutocapitalization(.never)
@@ -31,6 +39,7 @@ struct LoginView: View {
                     Button {
                         Task {
                             await session.signIn(
+                                serverURL: serverURL,
                                 email: email.trimmingCharacters(in: .whitespacesAndNewlines),
                                 password: password
                             )
@@ -48,6 +57,7 @@ struct LoginView: View {
                         }
                     }
                     .disabled(
+                        serverURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
                         email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
                         password.isEmpty ||
                         session.state == .authenticating
