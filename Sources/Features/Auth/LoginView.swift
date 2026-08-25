@@ -3,7 +3,7 @@ import SwiftUI
 struct LoginView: View {
     @Environment(AppSession.self) private var session
 
-    @State private var serverURL = UserDefaults.standard.string(forKey: "estatewise.apiBaseURL") ?? "http://127.0.0.1:8001/api/v1"
+    @State private var serverURL = APIConfiguration.storedBaseURLString
     @State private var email = ""
     @State private var password = ""
 

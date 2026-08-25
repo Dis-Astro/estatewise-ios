@@ -3,8 +3,20 @@ import Foundation
 struct APIConfiguration: Sendable {
     var baseURL: URL
 
+    static let defaultBaseURLString = "http://192.168.0.37:5423/api/v1"
+
+    static var storedBaseURLString: String {
+        guard let stored = UserDefaults.standard.string(forKey: "estatewise.apiBaseURL"),
+              let host = URLComponents(string: stored)?.host?.lowercased(),
+              host != "127.0.0.1",
+              host != "localhost" else {
+            return defaultBaseURLString
+        }
+        return stored
+    }
+
     static let `default` = APIConfiguration(
-        baseURL: URL(string: UserDefaults.standard.string(forKey: "estatewise.apiBaseURL") ?? "http://127.0.0.1:8001/api/v1")!
+        baseURL: URL(string: storedBaseURLString)!
     )
 }
 
@@ -83,10 +95,30 @@ actor APIClient {
     }
 
     func configure(baseURLString: String) throws {
-        let normalized = baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let url = URL(string: normalized), url.scheme != nil, url.host != nil else {
+        var normalized = baseURLString.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !normalized.contains("://") {
+            normalized = "http://\(normalized)"
+        }
+
+        guard var components = URLComponents(string: normalized),
+              let scheme = components.scheme?.lowercased(),
+              scheme == "http" || scheme == "https",
+              components.host != nil else {
             throw APIError.invalidBaseURL
         }
+
+        if components.path.isEmpty || components.path == "/" {
+            components.path = "/api/v1"
+        } else {
+            components.path = components.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+            components.path = "/\(components.path)"
+        }
+
+        guard let url = components.url else {
+            throw APIError.invalidBaseURL
+        }
+
+        normalized = url.absoluteString
         configuration = APIConfiguration(baseURL: url)
         UserDefaults.standard.set(normalized, forKey: "estatewise.apiBaseURL")
     }

@@ -19,6 +19,9 @@
 		A1000000000000000000000A /* ReportListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000A /* ReportListView.swift */; };
 		A1000000000000000000000B /* ReportEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000B /* ReportEditorView.swift */; };
 		A1000000000000000000000C /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000C /* SyncStatusView.swift */; };
+		A1000000000000000000000D /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000010 /* APIClient.swift */; };
+		A1000000000000000000000E /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000011 /* AppSession.swift */; };
+		A1000000000000000000000F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000012 /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,9 @@
 		B1000000000000000000000D /* EstateWise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EstateWise.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1000000000000000000000E /* project.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = project.yml; sourceTree = "<group>"; };
 		B1000000000000000000000F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B10000000000000000000010 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Services/APIClient.swift; sourceTree = "<group>"; };
+		B10000000000000000000011 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Services/AppSession.swift; sourceTree = "<group>"; };
+		B10000000000000000000012 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources/Features/Auth/LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +71,9 @@
 				B1000000000000000000000A /* ReportListView.swift */,
 				B1000000000000000000000B /* ReportEditorView.swift */,
 				B1000000000000000000000C /* SyncStatusView.swift */,
+				B10000000000000000000010 /* APIClient.swift */,
+				B10000000000000000000011 /* AppSession.swift */,
+				B10000000000000000000012 /* LoginView.swift */,
 				B1000000000000000000000E /* project.yml */,
 				B1000000000000000000000F /* README.md */,
 				D10000000000000000000002 /* Products */,
@@ -159,6 +168,9 @@
 				A1000000000000000000000A /* ReportListView.swift in Sources */,
 				A1000000000000000000000B /* ReportEditorView.swift in Sources */,
 				A1000000000000000000000C /* SyncStatusView.swift in Sources */,
+				A1000000000000000000000D /* APIClient.swift in Sources */,
+				A1000000000000000000000E /* AppSession.swift in Sources */,
+				A1000000000000000000000F /* LoginView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +221,8 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = EstateWise;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsArbitraryLoads = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Consenti a EstateWise di collegarsi al server di test nella rete locale.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Seleziona foto da allegare ai verbali.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -233,6 +247,8 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = EstateWise;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsArbitraryLoads = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Consenti a EstateWise di collegarsi al server di test nella rete locale.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Seleziona foto da allegare ai verbali.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -22,8 +22,9 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: EstateWise
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsArbitraryLoads: YES
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: Consenti a EstateWise di collegarsi al server di test nella rete locale.
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Seleziona foto da allegare ai verbali.
         TARGETED_DEVICE_FAMILY: "1,2"
-
