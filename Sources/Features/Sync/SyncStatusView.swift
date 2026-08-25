@@ -4,6 +4,7 @@ import SwiftUI
 struct SyncStatusView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(SyncEngine.self) private var syncEngine
+    @Environment(AppSession.self) private var session
     @Query(sort: \SyncOperation.createdAt) private var operations: [SyncOperation]
 
     var body: some View {
@@ -21,7 +22,12 @@ struct SyncStatusView: View {
                 }
 
                 Button {
-                    Task { await syncEngine.synchronize(using: modelContext) }
+                    Task {
+                        await syncEngine.synchronize(
+                            using: modelContext,
+                            apiClient: session.apiClient
+                        )
+                    }
                 } label: {
                     Label("Sincronizza ora", systemImage: "arrow.triangle.2.circlepath")
                 }
@@ -64,4 +70,3 @@ struct SyncStatusView: View {
         }
     }
 }
-
