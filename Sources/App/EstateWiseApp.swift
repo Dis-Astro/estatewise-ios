@@ -4,6 +4,7 @@ import SwiftUI
 @main
 struct EstateWiseApp: App {
     private let modelContainer: ModelContainer
+    @State private var session = AppSession()
     @State private var syncEngine = SyncEngine()
 
     init() {
@@ -21,14 +22,22 @@ struct EstateWiseApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AppShellView()
-                .environment(syncEngine)
-                .task {
-                    await DemoDataSeeder.seedIfNeeded(in: modelContainer.mainContext)
-                    await syncEngine.synchronize(using: modelContainer.mainContext)
+            Group {
+                if session.state == .signedIn {
+                    AppShellView()
+                        .task {
+                            await syncEngine.synchronize(
+                                using: modelContainer.mainContext,
+                                apiClient: session.apiClient
+                            )
+                        }
+                } else {
+                    LoginView()
                 }
+            }
+            .environment(session)
+            .environment(syncEngine)
         }
         .modelContainer(modelContainer)
     }
 }
-
